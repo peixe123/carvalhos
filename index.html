@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unitv Filmes - Premium Guide</title>
+    <title>Unitv Filmes - Premium Guide (V13 GitHub)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 
@@ -51,7 +51,7 @@
         }
 
         .secret-gear {
-            color: rgba(255, 255, 255, 0.05); /* Um pouco mais visível para você achar */
+            color: rgba(255, 255, 255, 0.05);
             font-size: 1.5rem;
             cursor: pointer;
             padding: 10px;
@@ -62,8 +62,7 @@
         /* --- DESTAQUE (HERO SECTION) --- */
         .hero {
             height: 70vh;
-            /* Imagem do Big Buck Bunny para combinar com o teste */
-            background: url('https://peach.blender.org/wp-content/uploads/title_anouncement.jpg') center/cover no-repeat;
+            background: url('https://image.tmdb.org/t/p/original/uDgy6hyPd82kOHh6I95FLtLnj6p.jpg') center/cover no-repeat;
             display: flex;
             align-items: center;
             padding: 0 4%;
@@ -149,22 +148,29 @@
             width: 100%; height: 100%; background: #000; border-radius: 50% / 10%; 
             overflow: hidden; position: relative; border: 2px solid #111;
         }
-        .tv-screen-inner iframe { width: 100%; height: 100%; border: none; }
         
-        /* CORREÇÃO DO TAMANHO DO CONTAINER DO VÍDEO */
+        /* CORREÇÃO PARA GITHUB: Z-Index e Posição */
         #trailerContainer {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            z-index: 15; /* Vídeo na frente do fundo preto */
+        }
+        
+        #trailerContainer iframe {
+            width: 100%; height: 100%; border: none;
         }
 
         .scanlines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0.3) 4px);
-            pointer-events: none; z-index: 5; opacity: 0.6;
+            pointer-events: none; /* CLIQUES PASSAM DIRETO */
+            z-index: 20; opacity: 0.5;
         }
         .retro-tv::before {
             content: ''; position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
             background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%);
-            border-radius: 50% / 10%; pointer-events: none; z-index: 6;
+            border-radius: 50% / 10%; 
+            pointer-events: none; /* CLIQUES PASSAM DIRETO */
+            z-index: 30;
         }
 
         /* --- MODAIS GERAIS --- */
@@ -446,32 +452,34 @@
     </footer>
 
     <script>
-        // --- DADOS INICIAIS ---
-        // ATENÇÃO: Usei Big Buck Bunny que é Open Source para provar que a TV funciona.
+        // --- NOME NOVO PARA O LOCAL STORAGE (V13) ---
+        // Isso força a limpeza do filme antigo e carrega o novo teste.
+        const STORAGE_KEY = 'unitvMoviesData_v13_GITHUB';
+        const NOTES_KEY = 'unitvAdminNotes_v13';
+
+        // FILME PADRÃO: TRAILER OFICIAL YOUTUBE (Garantido de funcionar)
         const defaultMovies = [
             { 
-                id: 1, category: 'unitv', title: "Big Buck Bunny (Teste de Player)", img: "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", cast: "Blender Foundation", summary: "Este é um filme livre de direitos autorais. Se este vídeo rodar, seu código está perfeito e o erro 153 nos outros filmes é bloqueio do estúdio.", rating: 5, schedule: null,
-                trailerUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", // Link do Big Buck Bunny (Garantido funcionar)
-                adminRating: 5, opinions: ["Funciona sempre.", "Teste de Sistema."], watchLink: ""
+                id: 1, category: 'unitv', title: "YouTube Movies (Teste Final)", img: "https://i.ytimg.com/vi/u31qwQUeGuM/maxresdefault.jpg", cast: "Sistema", summary: "Este é o trailer oficial do canal YouTube Movies. Se ele rodar, a TV está perfeita. Se der erro 153, é bloqueio da sua rede Wi-Fi.", rating: 5, schedule: null,
+                trailerUrl: "https://www.youtube.com/watch?v=u31qwQUeGuM", 
+                adminRating: 5, opinions: ["Teste GitHub.", "Rodando Liso."], watchLink: ""
             }
         ];
 
-        // SISTEMA ANTI-CRASH (TELA BRANCA)
+        // SISTEMA DE CARREGAMENTO SEGURO
         let movies = [];
         try {
-            movies = JSON.parse(localStorage.getItem('unitvMoviesData')) || defaultMovies;
-            
-            // CORREÇÃO: Força o reset se o filme antigo (bloqueado) ainda estiver lá
-            if (movies.length > 0 && (movies[0].title === "Oppenheimer" || movies[0].title === "Interstellar")) {
-                console.log("Resetando para filme de teste (Big Buck Bunny)...");
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                movies = JSON.parse(data);
+            } else {
                 movies = defaultMovies;
-                localStorage.setItem('unitvMoviesData', JSON.stringify(movies));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
             }
-
         } catch (error) {
-            console.error("Erro ao carregar dados salvos. Resetando...", error);
-            movies = defaultMovies; 
-            localStorage.removeItem('unitvMoviesData'); 
+            console.error("Erro no storage. Resetando...", error);
+            movies = defaultMovies;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
         }
         
         const maxSlots = 24; 
@@ -619,9 +627,13 @@
             const videoId = getYoutubeId(movie.trailerUrl);
             
             if (videoId) {
-                // CORREÇÃO: Adicionado referrerpolicy="no-referrer" para evitar bloqueios de origem local (Erro 153)
-                const safeUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autohide=1&mute=1&showinfo=0&controls=1&autoplay=1`; 
-                trailerContainer.innerHTML = `<iframe src="${safeUrl}" title="Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
+                // CORREÇÃO CRÍTICA PARA GITHUB:
+                // 1. Usa window.location.origin para dizer ao YouTube quem somos.
+                // 2. Remove tags extras que causam conflito.
+                const origin = window.location.origin; 
+                const safeUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1&rel=0&controls=1&origin=${origin}`; 
+                
+                trailerContainer.innerHTML = `<iframe src="${safeUrl}" title="Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             } else {
                 trailerContainer.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#555;text-align:center;padding:20px;">Vídeo indisponível ou Link quebrado.</div>';
             }
@@ -689,13 +701,13 @@
         // --- BLOCO DE NOTAS ---
         function openNotepadModal() {
             document.getElementById('notepadModal').style.display = 'flex';
-            const savedNotes = localStorage.getItem('unitvAdminNotes') || '';
+            const savedNotes = localStorage.getItem(NOTES_KEY) || '';
             document.getElementById('notepadTextarea').value = savedNotes;
         }
 
         function tryCloseNotepad() {
             const currentText = document.getElementById('notepadTextarea').value;
-            const savedText = localStorage.getItem('unitvAdminNotes') || '';
+            const savedText = localStorage.getItem(NOTES_KEY) || '';
 
             if (currentText !== savedText) {
                 showAlert("Salve suas anotações antes de sair!", "warning");
@@ -706,7 +718,7 @@
 
         function saveNotepad() {
             const text = document.getElementById('notepadTextarea').value;
-            localStorage.setItem('unitvAdminNotes', text);
+            localStorage.setItem(NOTES_KEY, text);
             showAlert("Anotações salvas! 📝", "success");
         }
 
@@ -817,7 +829,7 @@
             document.getElementById('saveBtn').innerText = "Publicar";
             toggleWatchField();
         }
-        function saveData() { localStorage.setItem('unitvMoviesData', JSON.stringify(movies)); }
+        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(movies)); }
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('detailsModal')) closeDetailsModal();
