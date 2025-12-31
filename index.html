@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unitv Filmes - Premium Guide (V14 Final)</title>
+    <title>Unitv Filmes - Premium Guide (V15 GitHub)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 
@@ -149,7 +149,6 @@
             overflow: hidden; position: relative; border: 2px solid #111;
         }
         
-        /* Z-INDEX REVISADO: Vídeo precisa estar acessível */
         #trailerContainer {
             width: 100%; height: 100%; position: absolute; top: 0; left: 0;
             z-index: 10; 
@@ -159,18 +158,17 @@
             width: 100%; height: 100%; border: none;
         }
 
-        /* Camadas de efeito por cima, mas sem bloquear clique */
         .scanlines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0.3) 4px);
-            pointer-events: none; /* ESSENCIAL: Permite clicar no play através das linhas */
+            pointer-events: none;
             z-index: 20; opacity: 0.5;
         }
         .retro-tv::before {
             content: ''; position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
             background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%);
             border-radius: 50% / 10%; 
-            pointer-events: none; /* ESSENCIAL */
+            pointer-events: none;
             z-index: 30;
         }
 
@@ -225,23 +223,18 @@
         .btn-blue { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .btn-danger { background-color: #b71c1c; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;}
 
-        .admin-movie-list { margin-top: 20px; border-top: 2px solid #333; padding-top: 15px; }
-        .admin-item { display: flex; justify-content: space-between; align-items: center; background: #222; padding: 8px; margin-bottom: 5px; border-radius: 4px; border-left: 3px solid #555;}
-        .admin-item.yt-item { border-left-color: var(--youtube-red); }
-        .admin-item img { width: 30px; height: 30px; object-fit: cover; border-radius: 4px; margin-right: 10px; }
-
-        /* --- BLOCO DE NOTAS MODAL --- */
-        #notepadModal .modal-content { border-top-color: #007bff; border-width: 4px; }
-        #notepadTextarea { 
-            width: 100%; height: 300px; background: #222; border: 1px solid #444; 
-            color: #fff; padding: 15px; font-family: monospace; font-size: 1rem; resize: vertical;
+        /* ÁREA DE CÓDIGO GERADO */
+        #generatedCodeArea {
+            width: 100%; height: 100px; background: #000; color: #0f0; 
+            font-family: monospace; border: 1px solid #333; padding: 10px; margin-top: 10px;
+            display: none;
         }
 
         /* --- AVALIAÇÃO USER --- */
         .user-rating i { font-size: 1.5rem; cursor: pointer; color: #444; transition: color 0.2s; margin-right: 5px;}
         .user-rating i.active, .user-rating i:hover { color: var(--star-gold); }
 
-        /* --- FOOTER (WHATSAPP) --- */
+        /* --- FOOTER --- */
         footer {
             background: #080808; padding: 40px 4%; text-align: center; margin-top: 50px; border-top: 1px solid #222;
         }
@@ -344,32 +337,14 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="notepadModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="tryCloseNotepad()">&times;</span>
-            <h2 style="color: #007bff;">Bloco de Notas do Diretor 📝</h2>
-            <p style="color: #ccc; font-size: 0.9rem;">Rascunhe ideias, links ou lembretes.</p>
-            <textarea id="notepadTextarea" placeholder="Digite suas anotações aqui..."></textarea>
-            <div class="admin-actions" style="justify-content: flex-end;">
-                <button class="btn-primary" onclick="saveNotepad()">Salvar Agora</button>
-                <button class="btn-secondary" onclick="tryCloseNotepad()">Fechar</button>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content" style="border-top: 4px solid var(--netflix-red);">
             <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2 style="color: var(--netflix-red); margin:0;">Painel de Controle</h2>
-                <button class="btn-blue" onclick="openNotepadModal()" style="font-size:0.8rem; padding: 5px 10px;">
-                    <i class="fas fa-edit"></i> Bloco de Notas
-                </button>
-            </div>
+            <h2 style="color: var(--netflix-red); margin:0;">Adicionar Filme (Gerador)</h2>
+            <p style="font-size: 0.8rem; color: #aaa;">Preencha os dados e clique em "Gerar Código". Depois copie e cole na área "CENTRAL DE FILMES" no código.</p>
             <br>
             
             <form id="movieForm">
-                <input type="hidden" id="editId">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Categoria</label>
@@ -379,7 +354,7 @@
                         </select>
                     </div>
                      <div class="form-group">
-                        <label>Agendar</label>
+                        <label>Agendar (Opcional)</label>
                         <input type="datetime-local" id="inputSchedule" style="color-scheme: dark;">
                     </div>
                 </div>
@@ -396,14 +371,13 @@
                    </div>
                    <div class="form-group">
                        <label>Link Trailer (YouTube)</label>
-                       <input type="url" id="inputTrailer" required placeholder="Cole o link aqui...">
-                       <small style="color: #666; font-size: 0.7rem;">Aceita qualquer link do YouTube</small>
+                       <input type="url" id="inputTrailer" required placeholder="Link do YouTube...">
                    </div>
                 </div>
 
                 <div class="form-group" id="watchLinkGroup" style="display: none; background: #330000; padding: 10px; border-radius: 4px; border: 1px dashed var(--youtube-red);">
                     <label style="color: var(--youtube-red);">Link para Assistir (Link Direto)</label>
-                    <input type="url" id="inputWatchLink" placeholder="https://www.youtube.com/watch?v=...">
+                    <input type="url" id="inputWatchLink" placeholder="https://...">
                 </div>
 
                 <div class="form-group">
@@ -419,28 +393,26 @@
                     <div class="form-group">
                         <label>Nota Crítica</label>
                         <select id="inputAdminRating">
-                            <option value="0">N/A</option>
-                            <option value="1">⭐ 1 (2.0)</option>
-                            <option value="2">⭐⭐ 2 (4.0)</option>
-                            <option value="3">⭐⭐⭐ 3 (6.0)</option>
-                            <option value="4">⭐⭐⭐⭐ 4 (8.0)</option>
-                            <option value="5">⭐⭐⭐⭐⭐ 5 (10.0)</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                            <option value="4">⭐⭐⭐⭐ 4</option>
+                            <option value="3">⭐⭐⭐ 3</option>
+                            <option value="2">⭐⭐ 2</option>
+                            <option value="1">⭐ 1</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex: 2;">
-                        <label>Comentários (Máx 5)</label>
-                        <textarea id="inputOpinions" rows="4" placeholder="Um por linha..."></textarea>
+                        <label>Comentários (Um por linha)</label>
+                        <textarea id="inputOpinions" rows="3" placeholder="Comentário..."></textarea>
                     </div>
                 </div>
 
                 <div class="admin-actions">
-                    <button type="submit" class="btn-primary" id="saveBtn">Publicar</button>
-                    <button type="button" class="btn-secondary" onclick="resetForm()">Limpar</button>
+                    <button type="button" class="btn-primary" onclick="generateCode()">Gerar Código para GitHub</button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('movieForm').reset()">Limpar</button>
                 </div>
-            </form>
 
-            <h3>Catálogo</h3>
-            <div class="admin-movie-list" id="adminList"></div>
+                <textarea id="generatedCodeArea" readonly placeholder="O código aparecerá aqui para você copiar..."></textarea>
+            </form>
         </div>
     </div>
 
@@ -453,75 +425,120 @@
     </footer>
 
     <script>
-        // --- CHAVE NOVA V14 (RESETA TUDO) ---
-        const STORAGE_KEY = 'unitvMoviesData_v14_CLEAN';
-        const NOTES_KEY = 'unitvAdminNotes_v14';
+        /* =========================================================================
+           🎬 CENTRAL DE FILMES (EDITE AQUI PARA APARECER PARA TODOS) 🎬
+           ========================================================================= 
+           
+           INSTRUÇÕES:
+           1. Use o painel da Engrenagem para criar o filme.
+           2. Clique em "Gerar Código" e copie o texto.
+           3. Cole o texto dentro desta lista CATALOGO_FILMES abaixo.
+           4. Atenção com as vírgulas! Cada bloco { } deve ser separado por vírgula.
+        */
 
-        const defaultMovies = [
+        const CATALOGO_FILMES = [
+            
+            // --- INICIO DOS FILMES ---
+            
             { 
-                id: 1, category: 'unitv', title: "Big Buck Bunny (Teste V14)", img: "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", cast: "Blender Foundation", summary: "Teste final de sistema com código de player simplificado para máxima compatibilidade.", rating: 5, schedule: null,
+                id: 1, 
+                category: 'unitv', 
+                title: "Big Buck Bunny (Teste V15)", 
+                img: "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", 
+                cast: "Blender Foundation", 
+                summary: "Filme de teste oficial. Se este filme aparecer, significa que a Central de Filmes (V15) está funcionando perfeitamente no GitHub.", 
                 trailerUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", 
-                adminRating: 5, opinions: ["Teste Final.", "Código Limpo."], watchLink: ""
-            }
+                adminRating: 5, 
+                opinions: ["Funciona 100%", "Edição Global Ativa"], 
+                watchLink: ""
+            },
+
+            // --- COLE SEU NOVO FILME AQUI EMBAIXO (DÊ UM ENTER ANTES) ---
+            
+
         ];
 
-        let movies = [];
-        try {
-            const data = localStorage.getItem(STORAGE_KEY);
-            movies = data ? JSON.parse(data) : defaultMovies;
-            if(!data) localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
-        } catch (error) {
-            movies = defaultMovies;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
-        }
-        
-        const maxSlots = 24; 
+        /* =========================================================================
+           FIM DA ÁREA DE EDIÇÃO (NÃO PRECISA MEXER PRA BAIXO)
+           ========================================================================= */
+
+        const movies = CATALOGO_FILMES; // Agora usamos a lista fixa como fonte da verdade
+
+        // --- SISTEMA DA ENGRENAGEM (ABRE O GERADOR) ---
         let gearClicks = 0;
         let gearTimer = null;
         const gearBtn = document.getElementById('adminGear');
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderMovies();
-            setupGearSecret();
-        });
-
-        // --- ENGRENAGEM SECRETA ---
-        function setupGearSecret() {
-            if(!gearBtn) return;
+        if(gearBtn) {
             gearBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 gearClicks++;
-                if (gearClicks === 1) {
-                    gearTimer = setTimeout(() => { gearClicks = 0; }, 2500);
-                }
+                if (gearClicks === 1) gearTimer = setTimeout(() => { gearClicks = 0; }, 2500);
                 if (gearClicks === 5) {
                     clearTimeout(gearTimer);
                     gearClicks = 0;
                     openAdminModal();
-                    showAlert("Painel Admin Aberto! 🛠️", "success");
+                    showAlert("Gerador de Código Aberto! 🛠️", "success");
                 }
             });
         }
 
-        // --- ALERTS COM BALÕES ---
+        // --- FUNÇÃO GERADORA DE CÓDIGO (A MAGIA ACONTECE AQUI) ---
+        function generateCode() {
+            const title = document.getElementById('inputTitle').value;
+            const img = document.getElementById('inputImg').value;
+            const trailer = document.getElementById('inputTrailer').value;
+            
+            if(!title || !img || !trailer) {
+                showAlert("Preencha Título, Poster e Trailer!", "error");
+                return;
+            }
+
+            const cat = document.getElementById('inputCategory').value;
+            const watch = document.getElementById('inputWatchLink').value;
+            const cast = document.getElementById('inputCast').value;
+            const sum = document.getElementById('inputSummary').value.replace(/\n/g, " "); // Remove quebras de linha
+            const rating = document.getElementById('inputAdminRating').value;
+            
+            const opsRaw = document.getElementById('inputOpinions').value;
+            const opsArray = opsRaw.split('\n').filter(x => x.trim() !== "").map(x => `"${x.trim()}"`).join(", ");
+
+            // Cria o objeto formatado em texto
+            const newId = Date.now();
+            const codeBlock = `
+            { 
+                id: ${newId}, 
+                category: '${cat}', 
+                title: "${title}", 
+                img: "${img}", 
+                cast: "${cast}", 
+                summary: "${sum}", 
+                trailerUrl: "${trailer}", 
+                adminRating: ${rating}, 
+                opinions: [${opsArray}], 
+                watchLink: "${watch}"
+            },`;
+
+            const area = document.getElementById('generatedCodeArea');
+            area.style.display = 'block';
+            area.value = codeBlock;
+            area.select();
+            document.execCommand('copy');
+            
+            showAlert("Código copiado! Agora cole na Central de Filmes.", "success");
+        }
+
+        // --- ALERTS ---
         function showAlert(msg, type = 'info') {
             const container = document.getElementById('alert-container');
-            if(!container) return;
             const balloon = document.createElement('div');
             balloon.className = 'alert-balloon';
             if (type === 'warning') balloon.classList.add('alert-warning');
             
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-exclamation-circle';
-            if (type === 'warning') icon = 'fa-exclamation-triangle';
-
+            let icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
             balloon.innerHTML = `<i class="fas ${icon}"></i> <span>${msg}</span>`;
-            
             if(type === 'success') balloon.style.borderLeftColor = '#2ecc71';
-            if(type === 'error') balloon.style.borderLeftColor = '#e74c3c';
-            if(type === 'warning') balloon.style.borderLeftColor = '#ff9800';
-
+            
             container.appendChild(balloon);
             setTimeout(() => {
                 balloon.style.animation = 'slideOut 0.5s forwards';
@@ -529,17 +546,15 @@
             }, 3000);
         }
 
-        // --- EXTRAÇÃO DE ID (MÉTODO BLINDADO) ---
+        // --- EXTRATOR DE ID YOUTUBE (SIMPLES E EFICIENTE) ---
         function getYoutubeId(url) {
             if (!url) return null;
-            // Regex poderosa para pegar ID de qualquer link do youtube
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
-            // Garante que pegou 11 caracteres (tamanho padrão do ID)
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // --- RENDERIZAÇÃO HOME ---
+        // --- RENDERIZAR FILMES ---
         function renderMovies() {
             const containerUnitv = document.getElementById('unitvContainer');
             const containerYoutube = document.getElementById('youtubeContainer');
@@ -548,6 +563,8 @@
             containerUnitv.innerHTML = '';
             containerYoutube.innerHTML = '';
             const now = new Date();
+
+            // Filtra filmes (se tiver agendamento futuro, esconde)
             const visibleMovies = movies.filter(m => !m.schedule || new Date(m.schedule) <= now);
 
             if (visibleMovies.length === 0) {
@@ -599,13 +616,11 @@
             const videoId = getYoutubeId(movie.trailerUrl);
             
             if (videoId) {
-                // CORREÇÃO DEFINITIVA DO ERRO 153:
-                // Removidos todos os parâmetros de segurança que estavam bloqueando o GitHub.
-                // Apenas URL simples + ID.
+                // Player limpo V15
                 const safeUrl = `https://www.youtube.com/embed/${videoId}?rel=0`; 
                 trailerContainer.innerHTML = `<iframe src="${safeUrl}" title="Player" allowfullscreen></iframe>`;
             } else {
-                trailerContainer.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#555;text-align:center;padding:20px;">Vídeo indisponível ou Link quebrado.</div>';
+                trailerContainer.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#555;text-align:center;padding:20px;">Vídeo indisponível.</div>';
             }
 
             const btnWatch = document.getElementById('btnWatchFull');
@@ -640,7 +655,9 @@
                 opinionsSection.style.display = 'block';
             } else { opinionsSection.style.display = 'none'; }
 
-            renderRatingStars(movie.rating);
+            // Renderiza estrelas do usuário (apenas visual local)
+            const stars = document.querySelectorAll('#ratingStars i');
+            stars.forEach(s => s.classList.remove('active'));
             document.getElementById('detailsModal').style.display = 'flex';
         }
 
@@ -650,162 +667,18 @@
             currentMovieId = null;
         }
 
-        function renderRatingStars(rating) {
-            const stars = document.querySelectorAll('#ratingStars i');
-            stars.forEach(star => {
-                const val = parseInt(star.getAttribute('data-value'));
-                star.classList.toggle('active', val <= rating);
-                star.onclick = () => setRating(val);
-            });
-        }
-        function setRating(val) {
-            if(!currentMovieId) return;
-            const idx = movies.findIndex(m => m.id === currentMovieId);
-            if(idx > -1) {
-                movies[idx].rating = val;
-                saveData(); renderRatingStars(val);
-                showAlert(`Voto registrado: ${val} estrelas!`, "success");
-            }
-        }
-
-        // --- BLOCO DE NOTAS ---
-        function openNotepadModal() {
-            document.getElementById('notepadModal').style.display = 'flex';
-            const savedNotes = localStorage.getItem(NOTES_KEY) || '';
-            document.getElementById('notepadTextarea').value = savedNotes;
-        }
-
-        function tryCloseNotepad() {
-            const currentText = document.getElementById('notepadTextarea').value;
-            const savedText = localStorage.getItem(NOTES_KEY) || '';
-
-            if (currentText !== savedText) {
-                showAlert("Salve suas anotações antes de sair!", "warning");
-            } else {
-                document.getElementById('notepadModal').style.display = 'none';
-            }
-        }
-
-        function saveNotepad() {
-            const text = document.getElementById('notepadTextarea').value;
-            localStorage.setItem(NOTES_KEY, text);
-            showAlert("Anotações salvas! 📝", "success");
-        }
-
-        // --- ADMIN ---
         function toggleWatchField() {
             const cat = document.getElementById('inputCategory').value;
             const group = document.getElementById('watchLinkGroup');
             group.style.display = cat === 'youtube' ? 'block' : 'none';
-            if(cat !== 'youtube') document.getElementById('inputWatchLink').value = '';
         }
 
-        function openAdminModal() {
-            document.getElementById('adminModal').style.display = 'flex';
-            renderAdminList();
-            resetForm();
-        }
+        function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
         function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
-
-        function renderAdminList() {
-            const list = document.getElementById('adminList');
-            list.innerHTML = '';
-            movies.forEach(m => {
-                const div = document.createElement('div');
-                const cat = m.category || 'unitv';
-                div.className = `admin-item ${cat === 'youtube' ? 'yt-item' : ''}`;
-                const catLabel = cat === 'youtube' ? '<span style="color:var(--youtube-red); font-size:0.7rem;">[YOUTUBE]</span>' : '<span style="color:#007bff; font-size:0.7rem;">[UNITV]</span>';
-                div.innerHTML = `
-                    <div style="display:flex; align-items:center; flex-grow:1;">
-                        <img src="${m.img}" onerror="this.src='https://via.placeholder.com/30x30'">
-                        <div class="admin-item-info">
-                            <strong>${m.title}</strong> ${catLabel}
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn-secondary" style="padding:5px 8px;" onclick="editMovie(${m.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-danger" onclick="deleteMovie(${m.id})"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        document.getElementById('movieForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const editId = document.getElementById('editId').value;
-            const category = document.getElementById('inputCategory').value;
-            const title = document.getElementById('inputTitle').value;
-            const img = document.getElementById('inputImg').value;
-            
-            const trailerUrl = document.getElementById('inputTrailer').value;
-            const watchLink = document.getElementById('inputWatchLink').value;
-            
-            const adminRating = parseInt(document.getElementById('inputAdminRating').value) || 0;
-            const opinionsRaw = document.getElementById('inputOpinions').value;
-            const opinions = opinionsRaw.split('\n').map(s => s.trim()).filter(s => s !== '').slice(0, 5);
-
-            const cast = document.getElementById('inputCast').value;
-            const summary = document.getElementById('inputSummary').value;
-            const schedule = document.getElementById('inputSchedule').value || null;
-
-            if (!title || !img || !trailerUrl) { showAlert("Preencha Título, Poster e Trailer.", "error"); return; }
-            if (category === 'youtube' && !watchLink) { showAlert("Link Youtube obrigatório.", "error"); return; }
-
-            const movieData = { category, title, img, trailerUrl, watchLink, cast, summary, schedule, adminRating, opinions };
-
-            if (editId) {
-                const idx = movies.findIndex(m => m.id == editId);
-                if (idx > -1) { movies[idx] = { ...movies[idx], ...movieData }; showAlert("Atualizado!", "success"); }
-            } else {
-                movies.push({ id: Date.now(), rating: 0, ...movieData }); showAlert("Publicado!", "success");
-            }
-            saveData(); renderMovies(); renderAdminList(); resetForm();
-        });
-
-        function editMovie(id) {
-            const m = movies.find(x => x.id === id);
-            if(m) {
-                document.getElementById('editId').value = m.id;
-                document.getElementById('inputCategory').value = m.category || 'unitv';
-                toggleWatchField();
-                
-                document.getElementById('inputTitle').value = m.title;
-                document.getElementById('inputImg').value = m.img;
-                document.getElementById('inputTrailer').value = m.trailerUrl || ''; 
-                document.getElementById('inputWatchLink').value = m.watchLink || '';
-                
-                document.getElementById('inputAdminRating').value = m.adminRating || 0;
-                document.getElementById('inputOpinions').value = m.opinions ? m.opinions.join('\n') : '';
-                document.getElementById('inputCast').value = m.cast;
-                document.getElementById('inputSummary').value = m.summary;
-                document.getElementById('inputSchedule').value = m.schedule ? m.schedule : '';
-                document.getElementById('saveBtn').innerText = "Salvar Alterações";
-                document.getElementById('inputTitle').focus();
-            }
-        }
-
-        function deleteMovie(id) {
-            if(confirm("Excluir filme?")) {
-                movies = movies.filter(m => m.id !== id);
-                saveData(); renderMovies(); renderAdminList();
-                showAlert("Excluído.", "info");
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('movieForm').reset();
-            document.getElementById('editId').value = '';
-            document.getElementById('saveBtn').innerText = "Publicar";
-            toggleWatchField();
-        }
-        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(movies)); }
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('detailsModal')) closeDetailsModal();
             if (event.target == document.getElementById('adminModal')) closeAdminModal();
-            // Bloco de Notas fecha clicando fora apenas se não houver mudanças não salvas
-            if (event.target == document.getElementById('notepadModal')) tryCloseNotepad();
         }
     </script>
 </body>
