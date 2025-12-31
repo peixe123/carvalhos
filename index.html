@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unitv Filmes - Premium Guide (V13 GitHub)</title>
+    <title>Unitv Filmes - Premium Guide (V14 Final)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 
@@ -149,27 +149,28 @@
             overflow: hidden; position: relative; border: 2px solid #111;
         }
         
-        /* CORREÇÃO PARA GITHUB: Z-Index e Posição */
+        /* Z-INDEX REVISADO: Vídeo precisa estar acessível */
         #trailerContainer {
             width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            z-index: 15; /* Vídeo na frente do fundo preto */
+            z-index: 10; 
         }
         
         #trailerContainer iframe {
             width: 100%; height: 100%; border: none;
         }
 
+        /* Camadas de efeito por cima, mas sem bloquear clique */
         .scanlines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0.3) 4px);
-            pointer-events: none; /* CLIQUES PASSAM DIRETO */
+            pointer-events: none; /* ESSENCIAL: Permite clicar no play através das linhas */
             z-index: 20; opacity: 0.5;
         }
         .retro-tv::before {
             content: ''; position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
             background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%);
             border-radius: 50% / 10%; 
-            pointer-events: none; /* CLIQUES PASSAM DIRETO */
+            pointer-events: none; /* ESSENCIAL */
             z-index: 30;
         }
 
@@ -452,32 +453,24 @@
     </footer>
 
     <script>
-        // --- NOME NOVO PARA O LOCAL STORAGE (V13) ---
-        // Isso força a limpeza do filme antigo e carrega o novo teste.
-        const STORAGE_KEY = 'unitvMoviesData_v13_GITHUB';
-        const NOTES_KEY = 'unitvAdminNotes_v13';
+        // --- CHAVE NOVA V14 (RESETA TUDO) ---
+        const STORAGE_KEY = 'unitvMoviesData_v14_CLEAN';
+        const NOTES_KEY = 'unitvAdminNotes_v14';
 
-        // FILME PADRÃO: TRAILER OFICIAL YOUTUBE (Garantido de funcionar)
         const defaultMovies = [
             { 
-                id: 1, category: 'unitv', title: "YouTube Movies (Teste Final)", img: "https://i.ytimg.com/vi/u31qwQUeGuM/maxresdefault.jpg", cast: "Sistema", summary: "Este é o trailer oficial do canal YouTube Movies. Se ele rodar, a TV está perfeita. Se der erro 153, é bloqueio da sua rede Wi-Fi.", rating: 5, schedule: null,
-                trailerUrl: "https://www.youtube.com/watch?v=u31qwQUeGuM", 
-                adminRating: 5, opinions: ["Teste GitHub.", "Rodando Liso."], watchLink: ""
+                id: 1, category: 'unitv', title: "Big Buck Bunny (Teste V14)", img: "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", cast: "Blender Foundation", summary: "Teste final de sistema com código de player simplificado para máxima compatibilidade.", rating: 5, schedule: null,
+                trailerUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", 
+                adminRating: 5, opinions: ["Teste Final.", "Código Limpo."], watchLink: ""
             }
         ];
 
-        // SISTEMA DE CARREGAMENTO SEGURO
         let movies = [];
         try {
             const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                movies = JSON.parse(data);
-            } else {
-                movies = defaultMovies;
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
-            }
+            movies = data ? JSON.parse(data) : defaultMovies;
+            if(!data) localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
         } catch (error) {
-            console.error("Erro no storage. Resetando...", error);
             movies = defaultMovies;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
         }
@@ -536,35 +529,14 @@
             }, 3000);
         }
 
-        // --- EXTRAÇÃO DE ID ---
+        // --- EXTRAÇÃO DE ID (MÉTODO BLINDADO) ---
         function getYoutubeId(url) {
             if (!url) return null;
-            let videoId = null;
-            try {
-                if (url.includes('v=')) {
-                    videoId = url.split('v=')[1];
-                    const ampersandPosition = videoId.indexOf('&');
-                    if (ampersandPosition !== -1) {
-                        videoId = videoId.substring(0, ampersandPosition);
-                    }
-                } else if (url.includes('youtu.be/')) {
-                    videoId = url.split('youtu.be/')[1];
-                    const queryPosition = videoId.indexOf('?');
-                    if (queryPosition !== -1) {
-                        videoId = videoId.substring(0, queryPosition);
-                    }
-                } else if (url.includes('/embed/')) {
-                    videoId = url.split('/embed/')[1];
-                    const queryPosition = videoId.indexOf('?');
-                    if (queryPosition !== -1) {
-                        videoId = videoId.substring(0, queryPosition);
-                    }
-                }
-            } catch (e) {
-                console.error("Erro URL:", e);
-                return null;
-            }
-            return videoId;
+            // Regex poderosa para pegar ID de qualquer link do youtube
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            // Garante que pegou 11 caracteres (tamanho padrão do ID)
+            return (match && match[2].length === 11) ? match[2] : null;
         }
 
         // --- RENDERIZAÇÃO HOME ---
@@ -627,13 +599,11 @@
             const videoId = getYoutubeId(movie.trailerUrl);
             
             if (videoId) {
-                // CORREÇÃO CRÍTICA PARA GITHUB:
-                // 1. Usa window.location.origin para dizer ao YouTube quem somos.
-                // 2. Remove tags extras que causam conflito.
-                const origin = window.location.origin; 
-                const safeUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1&rel=0&controls=1&origin=${origin}`; 
-                
-                trailerContainer.innerHTML = `<iframe src="${safeUrl}" title="Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                // CORREÇÃO DEFINITIVA DO ERRO 153:
+                // Removidos todos os parâmetros de segurança que estavam bloqueando o GitHub.
+                // Apenas URL simples + ID.
+                const safeUrl = `https://www.youtube.com/embed/${videoId}?rel=0`; 
+                trailerContainer.innerHTML = `<iframe src="${safeUrl}" title="Player" allowfullscreen></iframe>`;
             } else {
                 trailerContainer.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#555;text-align:center;padding:20px;">Vídeo indisponível ou Link quebrado.</div>';
             }
