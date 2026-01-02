@@ -2,8 +2,15 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unitv Filmes - Premium Guide (V15.3)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Unitv Filmes - Premium Guide (V17.0)</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/2503/2503508.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/2503/2503508.png">
+    <meta name="theme-color" content="#141414">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 
@@ -13,6 +20,7 @@
             --netflix-red: #E50914; 
             --youtube-red: #FF0000; 
             --iptv-purple: #6200ea; 
+            --whatsapp-green: #25D366;
             --bg-black: #141414; 
             --bg-dark-grey: #181818; 
             --text-white: #fff; 
@@ -55,6 +63,48 @@
         .hero-title { font-size: 3rem; font-weight: 900; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
         .hero-desc { font-size: 1.1rem; margin-bottom: 20px; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
         
+        /* --- PROGRESS BAR (RODAPÉ) --- */
+        #progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #222;
+            z-index: 20000; /* Z-Index muito alto para garantir visibilidade */
+            display: block;
+        }
+        #progress-bar {
+            height: 100%;
+            background: var(--netflix-red);
+            width: 0%;
+            transition: width 0.2s linear; /* Transição mais suave e rápida */
+            box-shadow: 0 0 10px var(--netflix-red);
+        }
+
+        /* --- WHATSAPP FLOAT --- */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 100px; /* Acima da barra de navegação */
+            right: 20px;
+            background-color: var(--whatsapp-green);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 5500;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: pulse 2s infinite;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 15px rgba(0,0,0,0.7); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
         /* --- BOTÕES FIXOS INFERIORES --- */
         .bottom-nav {
             position: fixed;
@@ -63,7 +113,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
-            z-index: 5000; /* Z-index alto, mas menor que o modal agora */
+            z-index: 5000;
             background: rgba(20, 20, 20, 0.9);
             padding: 10px 20px;
             border-radius: 50px;
@@ -72,7 +122,6 @@
             transition: opacity 0.3s, transform 0.3s;
         }
 
-        /* Classe para esconder botões quando modal abrir */
         .bottom-nav.hidden {
             opacity: 0;
             pointer-events: none;
@@ -114,13 +163,13 @@
         .scanlines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0.3) 4px); pointer-events: none; z-index: 20; opacity: 0.5; }
         .retro-tv::before { content: ''; position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%); border-radius: 50% / 10%; pointer-events: none; z-index: 30; }
 
-        /* --- MODAIS (CORREÇÃO DE Z-INDEX) --- */
+        /* --- MODAIS --- */
         .modal-overlay { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.9); /* Fundo mais escuro */
-            z-index: 6000; /* SUPERIOR AOS BOTÕES (5000) */
+            background: rgba(0, 0, 0, 0.9); 
+            z-index: 6000; 
             justify-content: center; align-items: center; 
             backdrop-filter: blur(5px); 
         }
@@ -130,14 +179,33 @@
 
         .btn-watch-yt { display: block; width: 100%; background-color: var(--youtube-red); color: white; text-align: center; padding: 15px; font-weight: bold; font-size: 1.1rem; border-radius: 4px; text-decoration: none; margin-top: 15px; transition: background 0.3s; border: none; cursor: pointer; }
         .btn-watch-yt:hover { background-color: #cc0000; }
+        
+        /* Comentários Orgânicos */
+        .user-opinion-item {
+            background: #333;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-bottom-left-radius: 2px;
+            font-size: 0.9rem;
+            color: #eee;
+            border-left: 3px solid var(--netflix-red);
+        }
 
-        /* --- ADMIN --- */
+        /* --- ADMIN FORM --- */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 4px; font-weight: bold; color: #ccc; font-size: 0.85rem;}
+        .form-group label.required::after { content: " *"; color: red; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #444; background-color: #222; color: #fff; box-sizing: border-box; font-family: inherit; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--netflix-red); outline: none; }
+        
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
         
+        .notepad-area { margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; }
+        .notepad-area label { color: var(--star-gold); }
+        .notepad-area textarea { background: #111; color: #0f0; font-family: monospace; }
+
         .btn-primary { background-color: var(--netflix-red); color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .btn-secondary { background-color: #444; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
         
@@ -177,6 +245,14 @@
     </div>
 
     <div id="alert-container"></div>
+    
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    
+    <a href="https://whatsapp.com/channel/0029VbC56p4JJhzYEmaMSC45" target="_blank" class="whatsapp-float" title="Sugestões no Canal">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <div class="bottom-nav">
         <button class="nav-btn btn-yt-nav" onclick="filterCategory('youtube', this)">
@@ -187,7 +263,7 @@
         </button>
     </div>
 
-    <h2 class="section-title">Catálogo Unitv (IPTV)</h2>
+    <h2 class="section-title">Canal IPTV</h2>
     <div class="carousel-container" id="unitvContainer"></div>
 
     <h2 class="section-title" style="border-left-color: var(--youtube-red);">YouTube Filmes</h2>
@@ -212,122 +288,85 @@
             <p><strong>Elenco:</strong> <span id="detailCast" style="color: #bbb;"></span></p>
             <p id="detailSummary" style="line-height: 1.6; color: #ccc; font-size: 0.95rem;"></p>
             <div id="opinionsSection" style="display: none; margin-top: 20px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
-                <strong style="color: #fff;">Comentário Admin:</strong>
-                <ul id="detailOpinionsList" class="admin-opinions-list" style="margin-top: 10px;"></ul>
+                <strong style="color: #fff; display:block; margin-bottom:10px;">💬 O que estão dizendo:</strong>
+                <div id="detailOpinionsList" style="margin-top: 5px;"></div>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content" style="border-top: 4px solid var(--netflix-red);">
-            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+            <span class="close-btn" onclick="checkCloseAdmin()">&times;</span>
             <h2 style="color: var(--netflix-red); margin:0;">Adicionar Filme</h2>
-            <p style="font-size: 0.8rem; color: #aaa;">Preencha para gerar o código JSON.</p>
+            <p style="font-size: 0.8rem; color: #aaa;">Preencha todos os campos obrigatórios (*).</p>
             <br>
             <form id="movieForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Categoria</label>
-                        <select id="inputCategory" onchange="toggleWatchField()">
-                            <option value="unitv">Catálogo Unitv</option>
+                        <label class="required">Categoria</label>
+                        <select id="inputCategory" onchange="toggleWatchField()" required>
+                            <option value="unitv">Canal IPTV</option>
                             <option value="youtube">Filme Completo (YouTube)</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group"><label>Título</label><input type="text" id="inputTitle" required placeholder="Ex: Matrix"></div>
                 <div class="form-row">
-                   <div class="form-group"><label>URL Poster</label><input type="url" id="inputImg" required></div>
-                   <div class="form-group"><label>Link YouTube</label><input type="url" id="inputTrailer" required></div>
+                    <div class="form-group">
+                        <label class="required">Início Exibição</label>
+                        <input type="datetime-local" id="inputStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Fim Exibição</label>
+                        <input type="datetime-local" id="inputEnd" required>
+                    </div>
+                </div>
+
+                <div class="form-group"><label class="required">Título</label><input type="text" id="inputTitle" required placeholder="Ex: Matrix"></div>
+                <div class="form-row">
+                   <div class="form-group"><label class="required">URL Poster</label><input type="url" id="inputImg" required></div>
+                   <div class="form-group"><label class="required">Link YouTube</label><input type="url" id="inputTrailer" required></div>
                 </div>
                 <div class="form-group" id="watchLinkGroup" style="display: none;"><label>Link Assistir</label><input type="url" id="inputWatchLink"></div>
-                <div class="form-group"><label>Elenco</label><input type="text" id="inputCast"></div>
-                <div class="form-group"><label>Sinopse</label><textarea id="inputSummary" rows="3"></textarea></div>
+                <div class="form-group"><label class="required">Elenco</label><input type="text" id="inputCast" required></div>
+                <div class="form-group"><label class="required">Sinopse</label><textarea id="inputSummary" rows="3" required></textarea></div>
+                
                 <div class="form-group"><label>Nota (1-5)</label><select id="inputAdminRating"><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
-                <div class="form-group"><label>Comentário</label><textarea id="inputOpinions" rows="2"></textarea></div>
+                <div class="form-group"><label>Opinião de Destaque</label><textarea id="inputOpinions" rows="2" placeholder="Ex: Filmaço! Vale a pena conferir."></textarea></div>
                 
                 <div class="admin-actions">
-                    <button type="button" class="btn-primary" onclick="generateCode()">Gerar Código</button>
-                    <button type="button" class="btn-secondary" onclick="document.getElementById('movieForm').reset()">Limpar</button>
+                    <button type="button" class="btn-primary" onclick="generateCode()">Salvar & Gerar</button>
+                    <button type="button" class="btn-secondary" onclick="resetForm()">Limpar</button>
                 </div>
                 <textarea id="generatedCodeArea" readonly onclick="this.select()" placeholder="Código gerado aparecerá aqui..."></textarea>
+                
+                <div class="form-group notepad-area">
+                    <label>📝 Bloco de Notas Admin (Salvo Localmente)</label>
+                    <textarea id="adminNotepad" rows="5" placeholder="Anote ideias, links ou lembretes aqui..."></textarea>
+                </div>
             </form>
         </div>
     </div>
 
     <script>
         /* =========================================================================
-           🎬 CENTRAL DE FILMES - 5 POSSIBILIDADES (SLOTS) INICIAIS
+           🎬 CENTRAL DE FILMES
            ========================================================================= */
 
         const CATALOGO_FILMES = [
-            /* 1. Filme Unitv (Exemplo) */
             { 
-                id: 1, 
-                category: 'unitv', 
-                title: "Matrix - Reload", 
+                id: 1, category: 'unitv', title: "Homem-Aranha: Sem Volta", 
                 img: "https://image.tmdb.org/t/p/w500/8c4a8kE7PizaGQQnditMmI1xbRp.jpg", 
-                cast: "Tom Holland, Zendaya", 
-                summary: "Peter Parker tem sua identidade revelada e pede ajuda ao Doutor Estranho.", 
-                trailerUrl: "https://youtu.be/zmYE3tg26Qc?si=n8NMgd-TA1Q0Fdjn", 
-                adminRating: 5, 
-                opinions: ["Filmaço!", "Efeitos tops"], 
-                watchLink: ""
+                cast: "Tom Holland, Zendaya", summary: "Peter Parker tem sua identidade revelada...", 
+                trailerUrl: "https://www.youtube.com/watch?v=CyiiEJRZ2qs", adminRating: 5, opinions: ["Melhor filme do ano!", "Nostalgia pura."], 
+                start: "2023-01-01T00:00", end: "2030-12-31T23:59"
             },
-            
-            /* 2. Filme Unitv (Exemplo) */
             { 
-                id: 2, 
-                category: 'unitv', 
-                title: "Batman (2022)", 
-                img: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg", 
-                cast: "Robert Pattinson", 
-                summary: "Bruce Wayne luta contra o crime em Gotham City.", 
-                trailerUrl: "https://www.youtube.com/watch?v=mqqft2x_Aa4", 
-                adminRating: 5, 
-                opinions: ["Muito sombrio", "Melhor Batman"], 
-                watchLink: ""
-            },
-            
-            /* 3. Filme Youtube Completo (Exemplo) */
-            { 
-                id: 3, 
-                category: 'youtube', 
-                title: "Resgate 2", 
+                id: 3, category: 'youtube', title: "Resgate 2", 
                 img: "https://image.tmdb.org/t/p/w500/1H2x2K41Z2N62du24y1z47E1x.jpg", 
-                cast: "Chris Hemsworth", 
-                summary: "Tyler Rake escapa da morte e parte para outra missão perigosa.", 
-                trailerUrl: "https://www.youtube.com/watch?v=Y274jZs5s_g", 
-                adminRating: 4, 
-                opinions: ["Ação pura"], 
-                watchLink: "https://www.youtube.com/watch?v=Y274jZs5s_g" 
-            },
-            
-            /* 4. Filme Unitv (Exemplo) */
-            { 
-                id: 4, 
-                category: 'unitv', 
-                title: "Top Gun: Maverick", 
-                img: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg", 
-                cast: "Tom Cruise", 
-                summary: "Maverick retorna à escola de aviação para treinar a elite.", 
-                trailerUrl: "https://www.youtube.com/watch?v=giXco2jaZ_4", 
-                adminRating: 5, 
-                opinions: ["Melhor que o primeiro"], 
-                watchLink: ""
-            },
-            
-            /* 5. Filme Youtube Completo (Exemplo) */
-            { 
-                id: 5, 
-                category: 'youtube', 
-                title: "A Múmia (Clássico)", 
-                img: "https://image.tmdb.org/t/p/w500/c7a72W5c66X6z2y52d27521.jpg", 
-                cast: "Brendan Fraser", 
-                summary: "Um americano serve na Legião Estrangeira e desperta uma múmia.", 
-                trailerUrl: "https://www.youtube.com/watch?v=fJ1O1vb9AUU", 
-                adminRating: 4, 
-                opinions: ["Nostalgia pura"], 
-                watchLink: "https://www.youtube.com/watch?v=fJ1O1vb9AUU" 
+                cast: "Chris Hemsworth", summary: "Tyler Rake escapa da morte...", 
+                trailerUrl: "https://www.youtube.com/watch?v=Y274jZs5s_g", adminRating: 4, opinions: ["Muita ação do começo ao fim."], 
+                watchLink: "https://www.youtube.com/watch?v=Y274jZs5s_g",
+                start: "2023-01-01T00:00", end: "2030-12-31T23:59"
             }
         ];
 
@@ -335,38 +374,72 @@
            ⚙️ LÓGICA DO SISTEMA
            ========================================================================= */
 
-        // Se tiver no LocalStorage, usa, se não, usa os 5 iniciais acima
         let movies = JSON.parse(localStorage.getItem('unitv_movies')) || CATALOGO_FILMES;
 
         let gearClicks = 0;
         let gearTimer = null;
+        let updateInterval = null;
+        const UPDATE_TIME_MS = 120000; // 2 minutos
+
+        // Estado do Formulário Admin
+        let formIsDirty = false;
+        let forceClosePending = false;
         
+        // Estado do Pause
+        let isPaused = false;
+        let pauseStartTime = 0;
+
         function init() {
             renderMovies();
             updateClock();
             checkConnection();
-            checkUpdateTimer(); 
+            
+            // Inicializa Timer de Atualização
+            if (!localStorage.getItem('lastUpdateTimer')) {
+                localStorage.setItem('lastUpdateTimer', Date.now());
+            }
+            // Força atualização da barra imediatamente
+            updateTimerLogic();
+            updateInterval = setInterval(updateTimerLogic, 200);
             
             setInterval(updateClock, 1000);
             setInterval(checkConnection, 5000);
-            setInterval(checkUpdateTimer, 60000); 
             
             setupAdminGear();
+            setupFormDirtyCheck();
+            setupAdminNotepad();
         }
 
-        // --- Timer Update ---
-        function checkUpdateTimer() {
-            const lastUpdate = localStorage.getItem('lastUpdateTimer');
+        // --- Lógica do Timer e Barra (Reforçada) ---
+        function updateTimerLogic() {
+            if (isPaused) return; 
+
             const now = Date.now();
-            if (!lastUpdate) {
+            let lastUpdate = parseInt(localStorage.getItem('lastUpdateTimer'));
+            
+            // Segurança contra NaN
+            if(!lastUpdate) {
+                lastUpdate = now;
                 localStorage.setItem('lastUpdateTimer', now);
-            } else {
-                if ((now - parseInt(lastUpdate)) > 120000) { // 2 minutos
-                    showAlert("🔄 Atualizando catálogo...", "success");
-                    localStorage.setItem('lastUpdateTimer', now);
-                    setTimeout(() => renderMovies(), 1000);
-                }
             }
+
+            let diff = now - lastUpdate;
+
+            // Se passou do tempo
+            if (diff >= UPDATE_TIME_MS) {
+                showAlert("🔄 Atualizando catálogo...", "success");
+                localStorage.setItem('lastUpdateTimer', now);
+                diff = 0;
+                setTimeout(() => renderMovies(), 1000);
+            }
+
+            // Atualiza Barra
+            let percent = (diff / UPDATE_TIME_MS) * 100;
+            if(percent > 100) percent = 100;
+            if(percent < 0) percent = 0;
+            
+            const bar = document.getElementById('progress-bar');
+            if(bar) bar.style.width = percent + '%';
         }
 
         // --- Relógio e WiFi ---
@@ -384,10 +457,6 @@
             } else {
                 wifiIcon.style.color = '#FF0000';
                 wifiIcon.classList.replace('fa-wifi', 'fa-wifi-slash');
-                if(!sessionStorage.getItem('offlineAlerted')) {
-                    showAlert("⚠️ Modo Offline Ativo", "warning");
-                    sessionStorage.setItem('offlineAlerted', 'true');
-                }
             }
         }
 
@@ -400,8 +469,18 @@
             containerUnitv.innerHTML = '';
             containerYoutube.innerHTML = '';
 
+            const now = new Date();
+
             movies.forEach((movie) => {
+                // Filtro de Categoria
                 if (filter && movie.category !== filter) return;
+
+                // Filtro de Data (Agendamento)
+                if (movie.start && movie.end) {
+                    const dStart = new Date(movie.start);
+                    const dEnd = new Date(movie.end);
+                    if (now < dStart || now > dEnd) return;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'movie-card';
@@ -430,7 +509,6 @@
             });
         }
         
-        // --- Filtros ---
         function filterCategory(cat, btn) {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if (btn.dataset.active === "true") {
@@ -446,7 +524,7 @@
             }
         }
 
-        // --- Modais ---
+        // --- Detalhes Modal ---
         function openDetails(id) {
             const movie = movies.find(m => m.id === id);
             if(!movie) return;
@@ -454,6 +532,8 @@
             document.getElementById('detailTitle').innerText = movie.title;
             document.getElementById('detailCast').innerText = movie.cast;
             document.getElementById('detailSummary').innerText = movie.summary;
+            
+            // Removido a exibição da data conforme solicitado, mas a lógica de filtro permanece no renderMovies
             
             const trailerContainer = document.getElementById('trailerContainer');
             const videoId = getYoutubeId(movie.trailerUrl);
@@ -475,9 +555,12 @@
 
             const opinionsList = document.getElementById('detailOpinionsList');
             opinionsList.innerHTML = '';
-            if(movie.opinions && movie.opinions.length > 0) {
+            if(movie.opinions && movie.opinions.length > 0 && movie.opinions[0] !== "") {
                 movie.opinions.forEach(op => { 
-                    const li = document.createElement('li'); li.innerText = `"${op}"`; opinionsList.appendChild(li); 
+                    const div = document.createElement('div');
+                    div.className = 'user-opinion-item';
+                    div.innerText = `${op}`; 
+                    opinionsList.appendChild(div); 
                 });
                 document.getElementById('opinionsSection').style.display = 'block';
             } else { 
@@ -492,65 +575,165 @@
             document.getElementById('trailerContainer').innerHTML = '';
         }
 
-        // --- Funções Genéricas de Modal com Controle dos Botões Flutuantes ---
+        // --- Modais Genéricos ---
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
-            // Esconde os botões flutuantes
             document.querySelector('.bottom-nav').classList.add('hidden');
+            // Esconde botão whatsapp se quiser limpar a tela, ou deixa
+            document.querySelector('.whatsapp-float').style.display = 'none';
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
-            // Mostra os botões flutuantes de volta
             document.querySelector('.bottom-nav').classList.remove('hidden');
+            document.querySelector('.whatsapp-float').style.display = 'flex';
         }
 
-        // --- Admin ---
+        // --- ADMIN: Lógica de 3 Toques e Bloco de Notas ---
+        
         function setupAdminGear() {
             const gearBtn = document.getElementById('adminGear');
+            
+            // Listener Global para zerar contagem se clicar fora
+            window.addEventListener('click', (e) => {
+                if(!e.target.closest('.secret-gear')) {
+                    gearClicks = 0; // Zera silenciosamente
+                    if(gearTimer) clearTimeout(gearTimer);
+                }
+            });
+
             if(gearBtn) {
                 gearBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
+                    e.stopPropagation(); // Impede que o click propague para a janela e zere imediatamente
                     gearClicks++;
-                    if (gearClicks === 1) gearTimer = setTimeout(() => { gearClicks = 0; }, 2500);
-                    if (gearClicks === 5) {
+                    
+                    // Se for o primeiro click, inicia o timer de 3 segundos
+                    if (gearClicks === 1) {
+                        gearTimer = setTimeout(() => { 
+                            gearClicks = 0; 
+                        }, 3000); // 3 segundos para completar
+                    }
+                    
+                    // Se atingir 3 clicks
+                    if (gearClicks === 3) {
                         clearTimeout(gearTimer);
                         gearClicks = 0;
                         openAdminModal();
-                        showAlert("🛠️ Modo Editor Aberto", "success");
                     }
                 });
             }
         }
 
-        function openAdminModal() { openModal('adminModal'); }
-        function closeAdminModal() { closeModal('adminModal'); }
+        function openAdminModal() {
+            isPaused = true;
+            pauseStartTime = Date.now();
+            
+            showAlert("🛠️ Painel Admin (Timer Pausado)", "success");
+            openModal('adminModal');
+            
+            // Sugestão de datas padrão
+            if(!document.getElementById('inputStart').value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('inputStart').value = now.toISOString().slice(0,16);
+                
+                const nextYear = new Date();
+                nextYear.setFullYear(nextYear.getFullYear() + 1);
+                nextYear.setMinutes(nextYear.getMinutes() - nextYear.getTimezoneOffset());
+                document.getElementById('inputEnd').value = nextYear.toISOString().slice(0,16);
+            }
+        }
+
+        function setupAdminNotepad() {
+            const notepad = document.getElementById('adminNotepad');
+            // Carrega do LocalStorage
+            notepad.value = localStorage.getItem('admin_notepad') || '';
+            
+            // Salva ao digitar
+            notepad.addEventListener('input', () => {
+                localStorage.setItem('admin_notepad', notepad.value);
+            });
+        }
+
+        function setupFormDirtyCheck() {
+            const form = document.getElementById('movieForm');
+            form.addEventListener('input', () => {
+                formIsDirty = true;
+                forceClosePending = false; 
+            });
+        }
+
+        function checkCloseAdmin() {
+            if (formIsDirty && !forceClosePending) {
+                showAlert("⚠️ Alterações não salvas! Clique fechar novamente para perder.", "warning");
+                forceClosePending = true;
+            } else {
+                closeAdminModalLogic();
+            }
+        }
+
+        function closeAdminModalLogic() {
+            // RESUME O TIMER
+            if (isPaused) {
+                const pauseDuration = Date.now() - pauseStartTime;
+                const oldLastUpdate = parseInt(localStorage.getItem('lastUpdateTimer')) || Date.now();
+                localStorage.setItem('lastUpdateTimer', oldLastUpdate + pauseDuration);
+                isPaused = false;
+            }
+
+            closeModal('adminModal');
+            resetForm(); 
+        }
+
+        function resetForm() {
+            document.getElementById('movieForm').reset();
+            formIsDirty = false;
+            forceClosePending = false;
+            document.getElementById('generatedCodeArea').style.display = 'none';
+        }
 
         function generateCode() {
-            const title = document.getElementById('inputTitle').value;
-            const img = document.getElementById('inputImg').value;
-            const trailer = document.getElementById('inputTrailer').value;
+            // 1. Coleta Inputs
+            const title = document.getElementById('inputTitle');
+            const img = document.getElementById('inputImg');
+            const trailer = document.getElementById('inputTrailer');
+            const cast = document.getElementById('inputCast');
+            const sum = document.getElementById('inputSummary');
+            const start = document.getElementById('inputStart');
+            const end = document.getElementById('inputEnd');
             
-            if(!title || !img) { showAlert("Preencha título e imagem!", "warning"); return; }
+            // Verificação de Obrigatórios
+            const requiredFields = [start, end, title, img, trailer, cast, sum];
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    showAlert(`Campo obrigatório vazio!`, "warning");
+                    field.focus();
+                    return; 
+                }
+            }
             
+            // Se chegou aqui, tá tudo certo
             const cat = document.getElementById('inputCategory').value;
             const watch = document.getElementById('inputWatchLink').value;
-            const cast = document.getElementById('inputCast').value;
-            const sum = document.getElementById('inputSummary').value.replace(/\n/g, " ");
             const rating = document.getElementById('inputAdminRating').value;
             const ops = document.getElementById('inputOpinions').value;
             
+            // Trata opiniões como array, separando por ponto e vírgula se quiser, ou string única
+            const opinionsArray = ops ? [ops] : [];
+
             const newMovie = { 
                 id: Date.now(), 
                 category: cat, 
-                title: title, 
-                img: img, 
-                cast: cast, 
-                summary: sum, 
-                trailerUrl: trailer, 
+                title: title.value, 
+                img: img.value, 
+                cast: cast.value, 
+                summary: sum.value.replace(/\n/g, " "), 
+                trailerUrl: trailer.value, 
                 adminRating: parseInt(rating), 
-                opinions: [ops], 
-                watchLink: watch
+                opinions: opinionsArray, 
+                watchLink: watch,
+                start: start.value,
+                end: end.value
             };
 
             movies.push(newMovie);
@@ -561,7 +744,12 @@
             area.style.display = 'block';
             area.value = codeBlock;
             
-            showAlert("✅ Filme adicionado e salvo!", "success");
+            showAlert("✅ Salvo com sucesso!", "success");
+            
+            // Reseta estado de "sujo"
+            formIsDirty = false;
+            forceClosePending = false;
+            
             renderMovies(); 
         }
 
@@ -591,11 +779,10 @@
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('detailsModal')) closeDetailsModal();
-            if (event.target == document.getElementById('adminModal')) closeAdminModal();
+            // Admin não fecha no click fora para evitar acidentes
         }
 
         window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
-
